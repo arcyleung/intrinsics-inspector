@@ -46,26 +46,7 @@
           class="inline-input w-50" placeholder="Please Input" @select="handleSelect" />
       </el-aside>
       <div class="flex flex-grow">
-        <el-auto-resizer>
-          <template #default="{ height, width }">
-            <el-table-v2 fixed :columns="columns" :data="data" :width="width" :height="height"
-               :expand-column-key="columns[0].key">
-               
-              <template #overlay>
-                <div class="el-loading-mask" style="display: flex; align-items: center; justify-content: center">
-                  <el-icon class="is-loading" color="var(--el-color-primary)" :size="46">
-                    <loading-icon />
-                  </el-icon>
-                </div>
-              </template>
-
-              <template #row="props">
-                <Row v-bind="props" />
-              </template>
-              
-            </el-table-v2>
-          </template>
-        </el-auto-resizer>
+          <SearchTable :data="intrinsics.value"/>
       </div>
 
     </el-container>
@@ -75,6 +56,7 @@
 <script lang="jsx" setup>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
+import SearchTable from './components/SearchTable.vue'
 import { Canvas, Rect } from 'fabric';
 
 import { Loading as LoadingIcon } from '@element-plus/icons-vue'
@@ -110,54 +92,6 @@ const createFilter = (queryString) => {
 const handleSelect = (item) => {
   console.log(item)
 }
-
-const generateColumns = (length = 10, prefix = 'column-', props) => {
-  console.log(intrinsics.value)
-  return Array.from({ length }).map((_, columnIndex) => ({
-    ...props,
-    key: `${prefix}${columnIndex}`,
-    dataKey: `${prefix}${columnIndex}`,
-    title: `Column ${columnIndex}`,
-    width: 150,
-  }))
-}
-
-const generateData = (
-  columns,
-  length = 200,
-  prefix = 'row-'
-) =>
-  Array.from({ length }).map((_, rowIndex) => {
-    return columns.reduce(
-      (rowData, column, columnIndex) => {
-        rowData[column.dataKey] = `Row ${rowIndex} - Col ${columnIndex}`
-        return rowData
-      },
-      {
-        id: `${prefix}${rowIndex}`,
-        parentId: null,
-      }
-    )
-  })
-
-const columns = generateColumns(intrinsics.values)
-const data = ref(generateData(columns, intrinsics.values).map((data) => {
-    data.children = [
-      {
-        id: `${data.id}-detail-content`,
-        detail: "Hello world",
-      },
-    ]
-    return data
-  })
-)
-
-const Row = ({ cells, rowData }) => {
-  if (rowData.detail) return <div class="p-6">{rowData.detail}</div>
-  return cells
-}
-
-Row.inheritAttrs = false
 
 onMounted(async () => {
   const res = await axios.get("/intel_intrinsics.json");

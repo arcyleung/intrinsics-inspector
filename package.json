@@ -1,0 +1,27 @@
+{
+  "name": "intrinsics-inspector",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.2.6",
+    "element-plus": "^2.2.28",
+    "fabric": "^6.0.0-beta1",
+    "vue": "^3.2.45",
+    "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.0.0",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.4",
+    "unplugin-auto-import": "^0.12.2",
+    "unplugin-vue-components": "^0.22.12",
+    "vite": "^4.0.0",
+    "vitepress": "^1.0.0-alpha.45"
+  }
+}

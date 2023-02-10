@@ -59,13 +59,10 @@ import TheWelcome from './components/TheWelcome.vue'
 import SearchTable from './components/SearchTable.vue'
 import { Canvas, Rect } from 'fabric';
 
-import { Loading as LoadingIcon } from '@element-plus/icons-vue'
-
 
 import axios from 'axios';
 
-import { defineComponent, onMounted, ref } from 'vue'
-import { random } from 'lodash';
+import { onMounted, ref } from 'vue'
 
 const state1 = ref('')
 const state2 = ref('');

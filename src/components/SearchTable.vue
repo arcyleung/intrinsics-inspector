@@ -23,6 +23,8 @@
 
 <script lang="jsx" setup>
 import { ref } from 'vue'
+import { Loading as LoadingIcon, Filter as FilterIcon } from '@element-plus/icons-vue'
+
 const props = defineProps({
   data: []
 })
@@ -67,11 +69,63 @@ const tableData = ref(generateData(columns, props.data).map((data) => {
 })
 )
 
+const shouldFilter = ref(false)
+const popoverRef = ref()
+
+const onFilter = () => {
+  popoverRef.value.hide()
+  if (shouldFilter.value) {
+    data.value = generateData(columns, 100, 'filtered-')
+  } else {
+    data.value = generateData(columns, 200)
+  }
+}
+
+const onReset = () => {
+  shouldFilter.value = false
+  onFilter()
+}
+
+
 const Row = ({ cells, rowData }) => {
     if (rowData.detail) return <div class="p-6">{rowData.detail}</div>
     return cells
 }
 
 Row.inheritAttrs = false
+
+columns[0].headerCellRenderer = (props) => {
+  return (
+    <div class="flex items-center justify-center">
+      <span class="mr-2 text-xs">{props.column.title}</span>
+      <ElPopover ref={popoverRef} trigger="click" {...{ width: 200 }}>
+        {{
+          default: () => (
+            <div class="filter-wrapper">
+              <div class="filter-group">
+                <ElCheckbox v-model={shouldFilter.value}>
+                  Filter Text
+                </ElCheckbox>
+              </div>
+              <div class="el-table-v2__demo-filter">
+                <ElButton text onClick={onFilter}>
+                  Confirm
+                </ElButton>
+                <ElButton text onClick={onReset}>
+                  Reset
+                </ElButton>
+              </div>
+            </div>
+          ),
+          reference: () => (
+            <ElIcon class="cursor-pointer">
+              <Filter />
+            </ElIcon>
+          ),
+        }}
+      </ElPopover>
+    </div>
+  )
+}
 
 </script>

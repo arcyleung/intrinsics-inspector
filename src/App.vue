@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf columns" class="flex max-h-screen">
+  <q-layout>
 
     <!-- <q-header elevated class="bg-primary text-white" height-hint="5vh">
       <q-toolbar>
@@ -19,8 +19,7 @@
           </template>
 
           <template v-slot:after>
-            <q-splitter v-model="hSplit" horizontal style="max-height: 100vh;" :limits="[10, 90]">
-
+            <q-splitter v-model="hSplit" horizontal style="height: 100vh;" :limits="[20, 90]">
               <template v-slot:before>
                 <div class="q-pl-md">
                   <div class="text-h4 q-mb-md">Before</div>
@@ -56,8 +55,6 @@
 </style>
 
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
 import SearchTable from './components/SearchTable.vue'
 import { Canvas, Rect } from 'fabric';
 

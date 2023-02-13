@@ -1,24 +1,34 @@
 <template>
   <div class="q-pr-sm">
-    <q-table
-      class="my-sticky-virtscroll-table"
-      dense
-      hide-bottom
-      title="Intrinsics"
-      :rows="rows"
-      :columns="columns"
-      row-key="index"
-      virtual-scroll
-      :virtual-scroll-sticky-size-start="48"
-      :rows-per-page-options="[0]"
-    ></q-table>
+    <q-table class="intrinsics-table" dense title="Intrinsics Explorer" :rows="rows" :columns="columns"
+      row-key="intrinsic"
+        :filter="filter"
+        :filter-method="customFilter"
+        :visible-columns="visibleColumns" virtual-scroll :virtual-scroll-sticky-size-start="48" :rows-per-page-options="[0]">
+
+      <template v-slot:top>
+        <!--           <div class="text-h6">Filter by Columns</div> -->
+        <q-toggle v-for="col in columns" v-model="visibleColumns" :val="col.name" :label="col.label" :key="col.name" ></q-toggle>
+        <q-space></q-space>
+        Filter method<q-toggle v-model="byVisibility" :label="byVisibility ? 'Visibility' : 'Options'"
+          class="q-pr-md"></q-toggle>
+        <q-select v-model="filterCols" multiple dense outlined options-dense use-chips emit-value map-options
+          :options="columns" option-value="name" style="min-width: 150px;" label="Filter Columns"
+          v-if="!byVisibility"></q-select>
+        <q-input outlined dense debounce="300" v-model="filter" placeholder="Search">
+          <template v-slot:append>
+            <q-icon name="search"></q-icon>
+          </template>
+        </q-input>
+      </template>
+    </q-table>
   </div>
 </template>
 
 <style lang="sass">
-.my-sticky-virtscroll-table
+.intrinsics-table
   /* height or max-height is important */
-  height: 94vh
+  max-height: 100vh
 
   .q-table__top,
   .q-table__bottom,
@@ -34,137 +44,92 @@
     top: 48px
   thead tr:first-child th
     top: 0
+
+  .q-table td
+    padding: 0px 8px !important
+
 </style>
 
 <script setup>
+import { onMounted, ref, computed } from 'vue'
+import { useMeta } from 'quasar'
+import axios from 'axios';
+
+const intrinsics = ref([]);
+let rows = ref([])
+useMeta(() => {
+  return {
+    // whenever "title" from above changes, your meta will automatically update
+    rows: rows.value
+  }
+})
+
+let visibleColumns = ref([]);
+let byVisibility = ref(true);
+let filter = ref('');
+let filterCols = ref([]);
+
+const reqs = computed(() => columns.reduce((a, o) => {
+      o.required && a.push(o.name)
+      return a
+    }, []));
+
+const customFilter = (rows, terms) => {
+  const lowerTerms = terms ? terms.toLowerCase() : ''
+  console.log(visibleColumns.value)
+  const toFilter = byVisibility ? [...visibleColumns.value, ...reqs.value] : filterCols.value
+
+  const filteredRows = rows.filter(
+    row => toFilter.some(col => (row[col] + '').toLowerCase().includes(lowerTerms))
+  )
+  return filteredRows
+}
+
 const columns = [
   {
-    name: 'function',
+    name: 'intrinsic',
     required: true,
-    label: 'Function',
+    label: 'Intrinsic',
     align: 'left',
-    field: row => row.function,
+    field: row => row.intrinsic,
     format: val => `${val}`,
     sortable: true
   },
-  { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
-  { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-  { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-  { name: 'protein', label: 'Protein (g)', field: 'protein' },
-  { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-  { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-  { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
+  { name: 'ISA', align: 'center', label: 'ISA', field: 'tech', sortable: true },
+  { name: 'header', label: 'Header', field: 'header', sortable: true },
+  { name: 'CPUID', label: 'CPUID', field: 'CPUID' },
+  { name: 'category', label: 'Category', field: 'category', sortable: true },
+  // { name: 'protein', label: 'Protein (g)', field: 'protein' },
+  // { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
+  // { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
+  // { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
 ]
 
-const seed = [
-  {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%'
-  },
-  {
-    name: 'Ice cream sandwich',
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    sodium: 129,
-    calcium: '8%',
-    iron: '1%'
-  },
-  {
-    name: 'Eclair',
-    calories: 262,
-    fat: 16.0,
-    carbs: 23,
-    protein: 6.0,
-    sodium: 337,
-    calcium: '6%',
-    iron: '7%'
-  },
-  {
-    name: 'Cupcake',
-    calories: 305,
-    fat: 3.7,
-    carbs: 67,
-    protein: 4.3,
-    sodium: 413,
-    calcium: '3%',
-    iron: '8%'
-  },
-  {
-    name: 'Gingerbread',
-    calories: 356,
-    fat: 16.0,
-    carbs: 49,
-    protein: 3.9,
-    sodium: 327,
-    calcium: '7%',
-    iron: '16%'
-  },
-  {
-    name: 'Jelly bean',
-    calories: 375,
-    fat: 0.0,
-    carbs: 94,
-    protein: 0.0,
-    sodium: 50,
-    calcium: '0%',
-    iron: '0%'
-  },
-  {
-    name: 'Lollipop',
-    calories: 392,
-    fat: 0.2,
-    carbs: 98,
-    protein: 0,
-    sodium: 38,
-    calcium: '0%',
-    iron: '2%'
-  },
-  {
-    name: 'Honeycomb',
-    calories: 408,
-    fat: 3.2,
-    carbs: 87,
-    protein: 6.5,
-    sodium: 562,
-    calcium: '0%',
-    iron: '45%'
-  },
-  {
-    name: 'Donut',
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    sodium: 326,
-    calcium: '2%',
-    iron: '22%'
-  },
-  {
-    name: 'KitKat',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: '12%',
-    iron: '6%'
+
+
+
+onMounted(async () => {
+  const res = await axios.get("/intel_intrinsics.json");
+  const intrinsics_json = res.data;
+  // document.getElementsByClassName("el-table-v2__overlay")[0].remove()
+  // for (let i = 0; i < 1000; i++) {
+  //   rows = rows.concat(seed.slice(0).map(r => ({ ...r })))
+  // }
+
+  rows.value = intrinsics_json.map((intrin) => {
+    return {
+      intrinsic: intrin.name,
+      tech: intrin.tech,
+      header: intrin.header,
+      CPUID: intrin.CPUID,
+      category: intrin.category
+    }
   }
-]
+  )
+  console.log(rows)
+})
 
 // we generate lots of rows here
-let rows = []
-for (let i = 0; i < 1000; i++) {
-  rows = rows.concat(seed.slice(0).map(r => ({ ...r })))
-}
-rows.forEach((row, index) => {
-  row.index = index
-})
+
+
 </script>

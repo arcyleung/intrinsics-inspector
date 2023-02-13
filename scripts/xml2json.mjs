@@ -27,7 +27,7 @@ const flattened_intrinsics_list = intrinsics.map(intrin => {
 
 console.log(flattened_intrinsics_list[0])
 
-fs.writeFileSync('./public/intel_intrinsics.json', JSON.stringify(intrinsics, null, 2), 'utf8');
+fs.writeFileSync('./public/intel_intrinsics.json', JSON.stringify(flattened_intrinsics_list, null, 2), 'utf8');
 
 
 const types = new Set();

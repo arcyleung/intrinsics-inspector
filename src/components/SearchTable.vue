@@ -38,7 +38,7 @@
       </template>
 
       <template v-slot:body="props">
-        <q-tr :props="props">
+        <q-tr :props="props"  @click="props.expand = !props.expand">
           <q-td auto-width>
             <q-btn size="sm" color="accent" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'" />
           </q-td>
@@ -111,7 +111,6 @@ const reqs = computed(() => columns.reduce((a, o) => {
 
 const customFilter = (rows, terms) => {
   const lowerTerms = terms ? terms.toLowerCase() : ''
-  console.log(visibleColumns.value)
   const toFilter = byVisibility ? [...visibleColumns.value, ...reqs.value] : filterCols.value
 
   const filteredRows = rows.filter(
@@ -161,7 +160,6 @@ onMounted(async () => {
     }
   }
   )
-  console.log(rows)
 })
 
 // we generate lots of rows here

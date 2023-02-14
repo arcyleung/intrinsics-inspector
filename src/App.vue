@@ -21,12 +21,13 @@
           <template v-slot:after>
             <q-splitter v-model="hSplit" horizontal style="height: 100vh;" :limits="[20, 90]">
               <template v-slot:before>
-                <div class="q-pl-md">
+                <!-- <div class="q-pl-md">
                   <div class="text-h4 q-mb-md">Before</div>
                   <div v-for="n in 20" :key="n" class="q-my-md">{{ n }}. Lorem ipsum dolor sit, amet consectetur
                     adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus
                     obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</div>
-                </div>
+                </div> -->
+                <Editor> </Editor>
               </template>
 
               <template v-slot:after>
@@ -56,6 +57,7 @@
 
 <script setup>
 import SearchTable from './components/SearchTable.vue'
+import Editor from './components/Editor.vue'
 import { Canvas, Rect } from 'fabric';
 
 

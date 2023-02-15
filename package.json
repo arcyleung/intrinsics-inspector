@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@quasar/extras": "^1.15.10",
+    "@quasar/extras": "^1.15.11",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
     "axios": "^1.2.6",
     "clusterize.js": "^1.0.0",

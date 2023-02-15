@@ -40,7 +40,7 @@
       <template v-slot:body="props">
         <q-tr :props="props"  @click="props.expand = !props.expand">
           <q-td auto-width>
-            <q-btn size="sm" color="accent" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'" />
+            <q-icon @click="props.expand = !props.expand" :name="props.expand ? 'sym_o_expand_less' : 'sym_o_expand_more'" />
           </q-td>
           <q-td
             v-for="col in props.cols"
@@ -52,7 +52,7 @@
         </q-tr>
         <q-tr class="q-virtual-scroll--with-prev" v-show="props.expand" :props="props">
           <q-td colspan="100%">
-            <div class="text-left">This is expand slot for row above: {{ props.row.name }}.</div>
+            <div class="text-left">Find usages on <a :href="`https://github.com/search?q=${ props.row.intrinsic }&type=code`">GitHub</a></div>
           </q-td>
         </q-tr>
       </template>
@@ -133,13 +133,7 @@ const columns = [
   { name: 'header', label: 'Header', field: 'header', sortable: true },
   { name: 'CPUID', label: 'CPUID', field: 'CPUID' },
   { name: 'category', label: 'Category', field: 'category', sortable: true },
-  // { name: 'protein', label: 'Protein (g)', field: 'protein' },
-  // { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-  // { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-  // { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
 ]
-
-
 
 
 onMounted(async () => {

@@ -1,5 +1,5 @@
 <template>
-    <div id="container" style="min-height: 100%"></div>
+    <div id="container" style="min-height: 50vh"></div>
 </template>
 
 <script setup>

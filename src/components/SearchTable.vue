@@ -152,8 +152,7 @@ onMounted(async () => {
       CPUID: intrin.CPUID,
       category: intrin.category
     }
-  }
-  )
+  });
 })
 
 // we generate lots of rows here

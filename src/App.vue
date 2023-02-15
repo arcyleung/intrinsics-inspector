@@ -15,28 +15,24 @@
       <q-page>
         <q-splitter v-model="vSplit" :limits="[20, 90]">
           <template v-slot:before>
-            <SearchTable  :data="intrinsics.value" />
+            <SearchTable :data="intrinsics.value" />
           </template>
 
           <template v-slot:after>
             <q-splitter v-model="hSplit" horizontal style="height: 100vh;" :limits="[20, 90]">
               <template v-slot:before>
+                <q-resize-observer @resize="onResize" :debounce="0"/>
                 <!-- <div class="q-pl-md">
                   <div class="text-h4 q-mb-md">Before</div>
                   <div v-for="n in 20" :key="n" class="q-my-md">{{ n }}. Lorem ipsum dolor sit, amet consectetur
                     adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus
                     obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</div>
                 </div> -->
-                <Editor> </Editor>
+                <Editor></Editor>
               </template>
 
               <template v-slot:after>
-                <div class="q-pl-md">
-                  <div class="text-h5 q-mb-md">Dataflow Graph</div>
-                  <div v-for="n in 20" :key="n" class="q-my-md">{{ n }}. Lorem ipsum dolor sit, amet consectetur
-                    adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus
-                    obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</div>
-                </div>
+                <DataflowGraph></DataflowGraph>
               </template>
 
             </q-splitter>
@@ -58,6 +54,7 @@
 <script setup>
 import SearchTable from './components/SearchTable.vue'
 import Editor from './components/Editor.vue'
+import DataflowGraph from './components/DataflowGraph.vue'
 import { Canvas, Rect } from 'fabric';
 
 
@@ -70,6 +67,9 @@ const state2 = ref('');
 
 const vSplit = ref(20);
 const hSplit = ref(50);
+
+let hSplitHeight = ref(0);
+let hSplitWidth = ref(0);
 
 const intrinsics = ref([]);
 
@@ -98,6 +98,14 @@ onMounted(async () => {
   // intrinsics.value = res.data;
   // document.getElementsByClassName("el-table-v2__overlay")[0].remove()
 })
+
+const onResize = ({ width, height }) => {
+  // this.splitterheight = height
+  hSplitHeight = height;
+  hSplitWidth = width;
+  console.log("new splitter height", width, height)
+}
+
 </script>
 
 <style scoped>

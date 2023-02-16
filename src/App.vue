@@ -32,7 +32,7 @@
               </template>
 
               <template v-slot:after>
-                <DataflowGraph></DataflowGraph>
+                <DataflowGraph :height="hSplitterHeight" :width="hSplitterWidth"></DataflowGraph>
               </template>
 
             </q-splitter>
@@ -68,30 +68,10 @@ const state2 = ref('');
 const vSplit = ref(20);
 const hSplit = ref(50);
 
-let hSplitHeight = ref(0);
-let hSplitWidth = ref(0);
+let hSplitterHeight = ref(0);
+let hSplitterWidth = ref(0);
 
 const intrinsics = ref([]);
-
-const querySearch = (queryString, cb) => {
-  const results = queryString
-    ? intrinsics.value.filter(createFilter(queryString))
-    : intrinsics.value
-  // call callback function to return suggestions
-  console.log(results[0])
-  cb(results)
-}
-const createFilter = (queryString) => {
-  return (intrinsic) => {
-    return (
-      intrinsic._attributes.name.toLowerCase().indexOf(queryString.toLowerCase()) > 0
-    )
-  }
-}
-
-const handleSelect = (item) => {
-  console.log(item)
-}
 
 onMounted(async () => {
   // const res = await axios.get("/intel_intrinsics.json");
@@ -101,8 +81,8 @@ onMounted(async () => {
 
 const onResize = ({ width, height }) => {
   // this.splitterheight = height
-  hSplitHeight = height;
-  hSplitWidth = width;
+  hSplitterHeight = height;
+  hSplitterWidth = width;
   console.log("new splitter height", width, height)
 }
 

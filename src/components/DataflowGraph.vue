@@ -1,14 +1,22 @@
 <template>
-    <div id="graph-container" style="min-height: 50vh"></div>
+    <div id="graph-container" :style="`height: ${splitterHeight}px`"></div>
 </template>
 
 <script setup>
 
 // Use a worker to parse the AST of the source in Editor
-import { h, getCurrentInstance, render, onMounted } from 'vue';
+import { h, getCurrentInstance, render, onMounted, defineProps, computed } from 'vue';
 import Drawflow from 'drawflow';
 import styleDrawflow from 'drawflow/dist/drawflow.min.css'
 const Vue = { version: 3, h, render };
+
+const props = defineProps({
+  height: 0,
+  width: 0
+})
+
+const splitterHeight = computed(() => Math.round(window.innerHeight - props.height))
+const splitterWidth = computed(() => props.width)
 
 onMounted(() => {
     const id = document.getElementById("graph-container");
@@ -21,7 +29,7 @@ onMounted(() => {
     var html = `
     <div><input type="text" df-name></div>
     `;
-    var data = { "name": '' };
+    var data = { "name": 'github' };
 
     
     editor.start();

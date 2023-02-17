@@ -6,6 +6,11 @@
 
 import { onMounted } from '@vue/runtime-core';
 import * as monaco from 'monaco-editor';
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  graphWorker: undefined,
+})
 
 self.MonacoEnvironment = {
     getWorker: function (workerId, label) {
@@ -46,10 +51,32 @@ void doWork(int* a, int* b) {
 }
 `
 onMounted(() => {
-    let editor = monaco.editor.create(document.getElementById('container'), {
+    let editorContainer = document.getElementById('container');
+    let editor = monaco.editor.create(editorContainer, {
         value: placeHolder,
         language: 'cpp'
     });
+
+    editor.getModel().onDidChangeContent((e) => {
+        console.log(props.graphWorker)
+        props.graphWorker.postMessage(editor.getModel().getValue());
+    });
+
+
+    // we need the parent of the editor
+    const parent = editorContainer.parentElement
+
+    window.addEventListener('resize', () => {
+        // make editor as small as possible
+        editor.layout({ width: 0, height: 0 })
+
+        // wait for next frame to ensure last layout finished
+        window.requestAnimationFrame(() => {
+            // get the parent dimensions and re-layout the editor
+            const rect = parent.getBoundingClientRect()
+            editor.layout({ width: rect.width, height: rect.height })
+        })
+    })
 })
 
 </script>

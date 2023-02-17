@@ -28,11 +28,11 @@
                     adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus
                     obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</div>
                 </div> -->
-                <Editor></Editor>
+                <Editor  :graphWorker="graphWorker"></Editor>
               </template>
 
               <template v-slot:after>
-                <DataflowGraph :height="hSplitterHeight" :width="hSplitterWidth"></DataflowGraph>
+                <DataflowGraph :height="hSplitterHeight" :width="hSplitterWidth" :graphWorker="graphWorker"></DataflowGraph>
               </template>
 
             </q-splitter>
@@ -57,7 +57,6 @@ import Editor from './components/Editor.vue'
 import DataflowGraph from './components/DataflowGraph.vue'
 import { Canvas, Rect } from 'fabric';
 
-
 import axios from 'axios';
 
 import { onMounted, ref } from 'vue'
@@ -73,6 +72,8 @@ let hSplitterWidth = ref(0);
 
 const intrinsics = ref([]);
 
+const graphWorker = new Worker('workers/dataflowGraphWorker.js');
+
 onMounted(async () => {
   // const res = await axios.get("/intel_intrinsics.json");
   // intrinsics.value = res.data;
@@ -83,7 +84,6 @@ const onResize = ({ width, height }) => {
   // this.splitterheight = height
   hSplitterHeight = height;
   hSplitterWidth = width;
-  console.log("new splitter height", width, height)
 }
 
 </script>

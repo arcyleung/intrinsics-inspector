@@ -56,6 +56,7 @@ import SearchTable from './components/SearchTable.vue'
 import Editor from './components/Editor.vue'
 import DataflowGraph from './components/DataflowGraph.vue'
 import { Canvas, Rect } from 'fabric';
+import * as Parser from 'web-tree-sitter';
 
 import axios from 'axios';
 
@@ -72,7 +73,7 @@ let hSplitterWidth = ref(0);
 
 const intrinsics = ref([]);
 
-const graphWorker = new Worker('workers/dataflowGraphWorker.js');
+const graphWorker = new Worker('workers/dataflowGraphWorker.mjs', { type: "module" });
 
 onMounted(async () => {
   // const res = await axios.get("/intel_intrinsics.json");

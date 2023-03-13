@@ -65,7 +65,7 @@ import { onMounted, ref } from 'vue'
 const state1 = ref('')
 const state2 = ref('');
 
-const vSplit = ref(20);
+const vSplit = ref(40);
 const hSplit = ref(50);
 
 let hSplitterHeight = ref(0);

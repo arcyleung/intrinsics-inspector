@@ -5,9 +5,7 @@
         :filter="filter"
         :filter-method="customFilter"
         :visible-columns="visibleColumns" virtual-scroll :virtual-scroll-sticky-size-start="48" :rows-per-page-options="[0]">
-
-
-
+        
       <template v-slot:top>
         <!--           <div class="text-h6">Filter by Columns</div> -->
         <q-toggle v-for="col in columns" v-model="visibleColumns" :val="col.name" :label="col.label" :key="col.name" ></q-toggle>
@@ -94,7 +92,6 @@ const intrinsics = ref([]);
 let rows = ref([])
 useMeta(() => {
   return {
-    // whenever "title" from above changes, your meta will automatically update
     rows: rows.value
   }
 })
@@ -143,6 +140,8 @@ onMounted(async () => {
   // for (let i = 0; i < 1000; i++) {
   //   rows = rows.concat(seed.slice(0).map(r => ({ ...r })))
   // }
+
+  // visibleColumns = columns.map(c => c.name)
 
   rows.value = intrinsics_json.map((intrin) => {
     return {

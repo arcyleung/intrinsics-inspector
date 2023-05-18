@@ -28,11 +28,11 @@
                     adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus
                     obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</div>
                 </div> -->
-                <Editor  :graphWorker="graphWorker"></Editor>
+                <Editor></Editor>
               </template>
 
               <template v-slot:after>
-                <DataflowGraph :height="hSplitterHeight" :width="hSplitterWidth" :graphWorker="graphWorker"></DataflowGraph>
+                <DataflowGraph :height="hSplitterHeight" :width="hSplitterWidth"></DataflowGraph>
               </template>
 
             </q-splitter>
@@ -73,7 +73,10 @@ let hSplitterWidth = ref(0);
 
 const intrinsics = ref([]);
 
-const graphWorker = new Worker('workers/dataflowGraphWorker.mjs', { type: "module" });
+try {
+	//@ts-ignore
+	delete WebAssembly.instantiateStreaming
+} catch {}
 
 onMounted(async () => {
   // const res = await axios.get("/intel_intrinsics.json");

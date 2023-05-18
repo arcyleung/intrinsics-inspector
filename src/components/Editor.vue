@@ -7,9 +7,10 @@
 import { onMounted } from '@vue/runtime-core';
 import * as monaco from 'monaco-editor';
 import { defineProps } from 'vue';
+import * as Parser from 'web-tree-sitter';
 
 const props = defineProps({
-  graphWorker: undefined,
+    //   graphWorker: undefined,
 })
 
 self.MonacoEnvironment = {
@@ -50,17 +51,25 @@ void doWork(int* a, int* b) {
     _mm256_permute2f128_ps(a_hi, b_hi);
 }
 `
-onMounted(() => {
+onMounted(async () => {
     let editorContainer = document.getElementById('container');
     let editor = monaco.editor.create(editorContainer, {
         value: placeHolder,
         language: 'cpp'
     });
 
+    await Parser.init();
+    const parser = new Parser;
+    const Cpp = await Parser.Language.load('/tree-sitter-cpp.wasm');
+    parser.setLanguage(Cpp);
+
+
     editor.getModel().onDidChangeContent((e) => {
-        console.log(props.graphWorker)
-        props.graphWorker.postMessage(editor.getModel().getValue());
+        const sourceCode = 'let x = 1; console.log(x);';
+        const tree = parser.parse(sourceCode);
+        console.log(tree.rootNode.toString());
     });
+
 
 
     // we need the parent of the editor

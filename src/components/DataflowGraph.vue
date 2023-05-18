@@ -23,7 +23,7 @@ const Vue = { version: 3, h, render };
 const props = defineProps({
   height: 0,
   width: 0,
-  graphWorker: undefined,
+  // graphWorker: undefined,
 })
 
 const splitterHeight = computed(() => Math.round(window.innerHeight - props.height))
@@ -44,11 +44,11 @@ onMounted(() => {
 
   drawFlow.start();
 
-  props.graphWorker.onmessage = (e) => {
-    console.log('Message received from worker');
-    drawFlow.import({ "drawflow": { "Home": { "data": { "1": { "id": 1, "name": "job1", "data": {}, "class": "", "html": "<div>job1</div>", "typenode": false, "inputs": {}, "outputs": { "output_1": { "connections": [ { "node": "2", "output": "input_1" } ] } }, "pos_x": 65.42498779296875, "pos_y": 175.28749084472656 }, "2": { "id": 2, "name": "job2", "data": {}, "class": "", "html": "<div>job2</div>", "typenode": false, "inputs": { "input_1": { "connections": [ { "node": "1", "input": "output_1" } ] } }, "outputs": {}, "pos_x": 464.42498779296875, "pos_y": 135.28749084472656 } } } } })
+  // props.graphWorker.onmessage = (e) => {
+  //   console.log('Message received from worker');
+  //   drawFlow.import({ "drawflow": { "Home": { "data": { "1": { "id": 1, "name": "job1", "data": {}, "class": "", "html": "<div>job1</div>", "typenode": false, "inputs": {}, "outputs": { "output_1": { "connections": [ { "node": "2", "output": "input_1" } ] } }, "pos_x": 65.42498779296875, "pos_y": 175.28749084472656 }, "2": { "id": 2, "name": "job2", "data": {}, "class": "", "html": "<div>job2</div>", "typenode": false, "inputs": { "input_1": { "connections": [ { "node": "1", "input": "output_1" } ] } }, "outputs": {}, "pos_x": 464.42498779296875, "pos_y": 135.28749084472656 } } } } })
     
-  }
+  // }
 
 //   drawFlow.addNode('github', 0, 1, 150, 300, 'github', data, html);
 

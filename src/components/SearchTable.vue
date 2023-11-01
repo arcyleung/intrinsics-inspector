@@ -1,14 +1,13 @@
 <template>
   <div class="q-pr-sm">
     <q-table class="intrinsics-table" dense title="Intrinsics Explorer" :rows="rows" :columns="columns"
-      row-key="intrinsic"
-        :filter="filter"
-        :filter-method="customFilter"
-        :visible-columns="visibleColumns" virtual-scroll :virtual-scroll-sticky-size-start="48" :rows-per-page-options="[0]">
-        
+      row-key="intrinsic" :filter="filter" :filter-method="customFilter" :visible-columns="visibleColumns" virtual-scroll
+      :virtual-scroll-sticky-size-start="48" :rows-per-page-options="[0]">
+
       <template v-slot:top>
         <!--           <div class="text-h6">Filter by Columns</div> -->
-        <q-toggle v-for="col in columns" v-model="visibleColumns" :val="col.name" :label="col.label" :key="col.name" ></q-toggle>
+        <q-toggle v-for="col in columns" v-model="visibleColumns" :val="col.name" :label="col.label"
+          :key="col.name"></q-toggle>
         <q-space></q-space>
         Filter method<q-toggle v-model="byVisibility" :label="byVisibility ? 'Visibility' : 'Options'"
           class="q-pr-md"></q-toggle>
@@ -25,32 +24,31 @@
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th auto-width />
-          <q-th
-            v-for="col in props.cols"
-            :key="col.name"
-            :props="props"
-          >
+          <q-th v-for="col in props.cols" :key="col.name" :props="props">
             {{ col.label }}
           </q-th>
         </q-tr>
       </template>
 
       <template v-slot:body="props">
-        <q-tr :props="props"  @click="props.expand = !props.expand">
+        <q-tr :props="props" @click="props.expand = !props.expand">
           <q-td auto-width>
-            <q-icon @click="props.expand = !props.expand" :name="props.expand ? 'sym_o_expand_less' : 'sym_o_expand_more'" />
+            <q-icon @click="props.expand = !props.expand"
+              :name="props.expand ? 'sym_o_expand_less' : 'sym_o_expand_more'" />
           </q-td>
-          <q-td
-            v-for="col in props.cols"
-            :key="col.name"
-            :props="props"
-          >
+          <q-td v-for="col in props.cols" :key="col.name" :props="props">
             {{ col.value }}
           </q-td>
         </q-tr>
         <q-tr class="q-virtual-scroll--with-prev" v-show="props.expand" :props="props">
           <q-td colspan="100%">
-            <div class="text-left">Find usages on <a :href="`https://github.com/search?q=${ props.row.intrinsic }&type=code`">GitHub</a></div>
+            <div class="text-left">Parameters:
+              <div v-for="param in props.row.parameter"> {{ param.type }} {{ param.varname }}
+              </div>
+            </div>
+            <div class="text-left">Returns: {{ props.row.return.type }} {{ props.row.return.varname }}</div>
+            <div class="text-left">Find usages on <a
+                :href="`https://github.com/search?q=${props.row.intrinsic}&type=code`">GitHub</a></div>
           </q-td>
         </q-tr>
       </template>
@@ -102,9 +100,9 @@ let filter = ref('');
 let filterCols = ref([]);
 
 const reqs = computed(() => columns.reduce((a, o) => {
-      o.required && a.push(o.name)
-      return a
-    }, []));
+  o.required && a.push(o.name)
+  return a
+}, []));
 
 const customFilter = (rows, terms) => {
   const lowerTerms = terms ? terms.toLowerCase() : ''
@@ -146,10 +144,7 @@ onMounted(async () => {
   rows.value = intrinsics_json.map((intrin) => {
     return {
       intrinsic: intrin.name,
-      tech: intrin.tech,
-      header: intrin.header,
-      CPUID: intrin.CPUID,
-      category: intrin.category
+      ...intrin
     }
   });
 })

@@ -79,9 +79,7 @@ try {
 } catch {}
 
 onMounted(async () => {
-  // const res = await axios.get("/intel_intrinsics.json");
-  // intrinsics.value = res.data;
-  // document.getElementsByClassName("el-table-v2__overlay")[0].remove()
+
 })
 
 const onResize = ({ width, height }) => {

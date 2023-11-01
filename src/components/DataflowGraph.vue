@@ -50,7 +50,8 @@ onMounted(() => {
     
   // }
 
-//   drawFlow.addNode('github', 0, 1, 150, 300, 'github', data, html);
+  drawFlow.addNode('github', 0, 1, 150, 300, 'github', data, html);
+  drawFlow.addNode('other', 0, 1, 150, 300, 'github', data, html);
 
 
 });

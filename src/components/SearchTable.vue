@@ -42,7 +42,7 @@
         </q-tr>
         <q-tr class="q-virtual-scroll--with-prev" v-show="props.expand" :props="props">
           <q-td colspan="100%">
-            <div class="text-left">Parameters:
+            <div class="text-left">Arguments:
               <div v-for="param in props.row.parameter"> {{ param.type }} {{ param.varname }}
               </div>
             </div>
@@ -132,24 +132,134 @@ const columns = [
 
 
 onMounted(async () => {
-  const res = await axios.get("/intel_intrinsics.json");
-  const intrinsics_json = res.data;
-  // document.getElementsByClassName("el-table-v2__overlay")[0].remove()
-  // for (let i = 0; i < 1000; i++) {
-  //   rows = rows.concat(seed.slice(0).map(r => ({ ...r })))
-  // }
+  const intel_intrinsics = await axios.get("/intel_intrinsics.json");
+  const arm_intrinsics = await axios.get("/arm_intrinsics.json");
+  const intel_json = intel_intrinsics.data;
+  const arm_json = arm_intrinsics.data;
 
-  // visibleColumns = columns.map(c => c.name)
+  rows.value = []
 
-  rows.value = intrinsics_json.map((intrin) => {
+  // {                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+  //   "name": "_addcarryx_u32",                                                                                                                                                                                                                                                                                                                                                                                                                             
+  //   "tech": "Other",                                                                                                                                                                                                                                                                                                                                                                                                                                      
+  //   "return": {                                                                                                                                                                                                                                                                                                                                                                                                                                           
+  //     "etype": "UI8",                                                                                                                                                                                                                                                                                                                                                                                                                                     
+  //     "type": "unsigned char",                                                                                                                                                                                                                                                                                                                                                                                                                            
+  //     "varname": "dst"                                                                                                                                                                                                                                                                                                                                                                                                                                    
+  //   },                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+  //   "parameter": [                                                                                                                                                                                                                                                                                                                                                                                                                                        
+  //     {                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //       "etype": "UI8",                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //       "type": "unsigned char",                                                                                                                                                                                                                                                                                                                                                                                                                          
+  //       "varname": "c_in"                                                                                                                                                                                                                                                                                                                                                                                                                                 
+  //     },                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  //     {                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //       "etype": "UI32",                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  //       "type": "unsigned int",                                                                                                                                                                                                                                                                                                                                                                                                                           
+  //       "varname": "a"                                                                                                                                                                                                                                                                                                                                                                                                                                    
+  //     },                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  //     {                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //       "etype": "UI32",                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  //       "type": "unsigned int",                                                                                                                                                                                                                                                                                                                                                                                                                           
+  //       "varname": "b"                                                                                                                                                                                                                                                                                                                                                                                                                                    
+  //     },                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  //     {                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //       "etype": "UI32",                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  //       "memwidth": "32",                                                                                                                                                                                                                                                                                                                                                                                                                                 
+  //       "type": "unsigned int *",                                                                                                                                                                                                                                                                                                                                                                                                                         
+  //       "varname": "out"                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  //     }                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //   ],                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+  //   "description": "Add unsigned 32-bit integers \"a\" and \"b\" with unsigned 8-bit carry-in \"c_in\" (carry or overflow flag), and store the unsigned 32-bit result in \"out\", and the carry-out in \"dst\" (carry or overflow flag).",                                                                                                                                                                                                                
+  //   "operation": "\r\ntmp[32:0] := a[31:0] + b[31:0] + (c_in > 0 ? 1 : 0)\r\nMEM[out+31:out] := tmp[31:0]\r\ndst[0] := tmp[32]\r\ndst[7:1] := 0\r\n\t",                                                                                                                                                                                                                                                                                                   
+  //   "instruction": [                                                                                                                                                                                                                                                                                                                                                                                                                                      
+  //     {                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //       "form": "r32, r32",                                                                                                                                                                                                                                                                                                                                                                                                                               
+  //       "name": "ADCX",                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //       "xed": "ADCX_GPR32d_GPR32d"                                                                                                                                                                                                                                                                                                                                                                                                                       
+  //     },                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  //     {                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //       "form": "r32, r32",                                                                                                                                                                                                                                                                                                                                                                                                                               
+  //       "name": "ADOX",                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //       "xed": "ADOX_GPR32d_GPR32d"                                                                                                                                                                                                                                                                                                                                                                                                                       
+  //     }                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //   ],                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+  //   "CPUID": "ADX",                                                                                                                                                                                                                                                                                                                                                                                                                                       
+  //   "header": "immintrin.h",
+  //   "category": "Arithmetic"
+  // },
+  rows.value = intel_json.map((intrin) => {
     return {
       intrinsic: intrin.name,
       ...intrin
     }
-  });
+  }).concat(
+    
+  arm_json.map((intrin) => ({
+      intrinsic: intrin.name,
+      parameter: intrin.arguments.map(a => { 
+        let type, varname;
+        [type, varname] = a.split(" ")
+        return { type, varname }
+      }),
+      return: { 
+        type: intrin.return_type.return_base_type,
+        varname: intrin.return_type.value,
+      }
+    }))
+  
+  );
+
+
+  // {                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+//           "SIMD_ISA": "Helium",                                                                                                                                                                                                                                                                                                                                                                                                                           
+//           "return_type": {                                                                                                                                                                                                                                                                                                                                                                                                                                
+//                 "return_base_type": "float",                                                                                                                                                                                
+//                 "element_bit_size": "16",                                                                                                                                                                                   
+//                 "value": "float16x8_t"                                                                                                                                                                                      
+//           },                                                                                                                                                                                                                
+//           "name": "[__arm_]vcreateq_f16",                                                                                                                                                                                   
+//           "arguments": [                                                                                                                                                                                                    
+//                 "uint64_t a",                                                                                                                                                                                               
+//                 "uint64_t b"                                                                                                                                                                                                
+//           ],                                                                                                                                                                                                                
+//           "description": "Return a vector with where its register representation is the same as the concatenation of the two 64-bit values.",                                                                               
+//           "instruction_group": "Vector manipulation|Create vector",                                                                                                                                                         
+//           "results": [                                                                                                                                                                                                      
+//              {                                                           
+//                 "Qd": "result"                                           
+//              }                                                           
+//           ],                                                             
+//           "instructions": [                                              
+//              {                                                                                                                                    
+//                "preamble": "This intrinsic compiles to the following instructions:",                                                              
+//                "list": [                                                 
+//                  {                                                       
+//                     "base_instruction": "VMOV",                          
+//                     "url": "",                                           
+//                     "operands": "Qd[2],Qd[0],Rt3,Rt"                     
+//                  },                                                      
+//                  {                                                       
+//                     "base_instruction": "VMOV",
+//                     "url": "",                                           
+//                     "operands": "Qd[3],Qd[1],Rt4,Rt2"
+//                  }                                                       
+//                ]                                                         
+//              }                                                           
+//           ],                                                             
+//           "Arguments_Preparation": {
+//              "a": {                                                      
+//                 "register": "[Rt, Rt2]"
+//                 },                                                       
+//              "b": {                                                      
+//                 "register": "[Rt3, Rt4]"
+//                 }                                                        
+//           },                                                             
+//           "Architectures": [                                                                                  
+//                "MVE"           ]                                                                              
+// },  
+
+  // rows.value.concat();
 })
-
-// we generate lots of rows here
-
 
 </script>

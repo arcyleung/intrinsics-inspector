@@ -132,8 +132,9 @@ const columns = [
 
 
 onMounted(async () => {
-  const intel_intrinsics = await axios.get("/intel_intrinsics.json");
-  const arm_intrinsics = await axios.get("/arm_intrinsics.json");
+  const prefix = process.env.NODE_ENV === "production" ? '/intrinsics-inspector/' : '/';
+  const intel_intrinsics = await axios.get(prefix + "intel_intrinsics.json");
+  const arm_intrinsics = await axios.get(prefix + "arm_intrinsics.json");
   const intel_json = intel_intrinsics.data;
   const arm_json = arm_intrinsics.data;
 
